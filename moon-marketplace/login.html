@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Login - MOON</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+  <main style="min-height:80vh;display:flex;align-items:center;justify-content:center">
+    <div style="width:360px;background:rgba(255,255,255,0.02);padding:20px;border-radius:12px">
+      <h2 style="margin-top:0">Masuk ke MOON</h2>
+      <input id="u" placeholder="Username" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--moon-white)"/>
+      <input id="p" type="password" placeholder="Password" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--moon-white)"/>
+      <button id="loginBtn" class="btn" style="background:var(--moon-soft);color:var(--moon-dark);padding:10px;border-radius:8px;border:none">Login</button>
+    </div>
+  </main>
+
+<script>
+document.getElementById("loginBtn").addEventListener("click", ()=>{
+  const u = document.getElementById("u").value.trim();
+  if(!u) return alert("Isi username dulu");
+  // mock login: simpan session user
+  localStorage.setItem("moon_user", JSON.stringify({username: u}));
+  alert("Login berhasil sebagai " + u);
+  window.location.href = "index.html";
+});
+</script>
+</body>
+</html>

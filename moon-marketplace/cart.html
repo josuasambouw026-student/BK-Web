@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Keranjang - MOON</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="brand"><a href="index.html" style="color:inherit;text-decoration:none"><h1>MOON</h1></a></div>
+      <div style="flex:1"></div>
+      <a class="btn" href="index.html">Lanjut Belanja</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2>Keranjang Belanja</h2>
+    <div id="cartItems"></div>
+
+    <div style="margin-top:18px;padding:16px;background:rgba(255,255,255,0.02);border-radius:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Total:</strong>
+        <strong id="cartTotal">Rp 0</strong>
+      </div>
+      <div style="margin-top:12px">
+        <button id="goCheckout" class="btn btn-primary" style="background:#5b84b1;border:none;color:#07111a;padding:10px 14px;border-radius:8px">Checkout</button>
+      </div>
+    </div>
+  </main>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

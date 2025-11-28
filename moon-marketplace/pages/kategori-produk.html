@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kategori - Produk</title>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body>
+  <header class="navbar"><div class="nav-inner"><div class="brand"><a href="../index.html" style="color:inherit;text-decoration:none"><h1>MOON</h1></a></div></div></header>
+  <main class="container">
+    <h2>Produk</h2>
+    <div id="productGrid" class="product-grid"></div>
+  </main>
+<script src="../assets/js/app.js"></script>
+<script>
+  // filter products by category 'Produk'
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const filtered = PRODUCTS ? PRODUCTS.filter(p=> p.category.toLowerCase() === 'produk' || p.category.toLowerCase() === 'produk') : [];
+    // if PRODUCTS not available in this file's scope because of path, app.js defines PRODUCTS in root; ensure app.js loads
+    if(typeof renderProducts === 'function'){
+      renderProducts(filtered.length ? filtered : PRODUCTS);
+    }
+  });
+</script>
+</body>
+</html>

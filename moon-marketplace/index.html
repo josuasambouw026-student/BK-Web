@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MOON Marketplace</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="brand">
+        <h1>MOON</h1>
+      </div>
+
+      <div class="search-wrap">
+        <input id="searchInput" class="search" type="search" placeholder="Cari produk, contoh: hoodie, botol, sticker..." />
+      </div>
+
+      <div class="nav-actions">
+        <a class="icon" href="cart.html" title="Keranjang">🛒 <span id="cartCount" class="cart-count">0</span></a>
+        <a class="btn" href="login.html">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CATEGORIES -->
+  <nav class="category-bar" aria-label="kategori">
+    <div class="category-inner">
+      <a href="pages/kategori-produk.html">Produk</a>
+      <a href="pages/kategori-makanan.html">Makanan</a>
+      <a href="pages/kategori-minuman.html">Minuman</a>
+      <a href="pages/kategori-pakaian.html">Pakaian</a>
+      <a href="pages/kategori-perabot.html">Perabotan</a>
+      <a href="pages/kategori-obat.html">Obat-obatan</a>
+      <a href="pages/kategori-kosmetik.html">Kosmetik</a>
+    </div>
+  </nav>
+
+  <!-- HERO / RECOMMENDED -->
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <h2>Rekomendasi untuk Anda</h2>
+        <p>Temukan produk terbaik dengan suasana bulan — cepat, aman, dan nyaman.</p>
+      </div>
+      <div class="hero-right">
+        <!-- bisa tempat banner -->
+        <div class="banner">Free shipping di kota tertentu</div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS GRID -->
+    <section class="product-section">
+      <div id="productGrid" class="product-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    &copy; <strong>MOON</strong> Marketplace — 2025
+  </footer>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

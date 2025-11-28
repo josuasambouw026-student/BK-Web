@@ -1,0 +1,210 @@
+/* ================== MOON MARKETPLACE CSS (FIXED) ================== */
+:root {
+    --moon-dark: #0d1b2a;
+    --moon-blue: #1b263b;
+    --moon-light-blue: #415a77;
+    --moon-gray: #778da9;
+    --moon-white: #e0e1dd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: var(--moon-dark);
+    color: var(--moon-white);
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+nav {
+    background: var(--moon-blue);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav a {
+    color: var(--moon-white);
+    text-decoration: none;
+    margin-right: 15px;
+    font-weight: 500;
+}
+nav a:hover {
+    color: var(--moon-gray);
+}
+
+/* PRODUCT GRID */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+}
+
+.product-card {
+    background: var(--moon-blue);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: 0.3s;
+}
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.product-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+}
+.product-card .price {
+    color: var(--moon-gray);
+    margin-bottom: 10px;
+}
+.product-card button {
+    padding: 10px;
+    background: var(--moon-light-blue);
+    color: var(--moon-white);
+    border: none;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.product-card button:hover {
+    background: var(--moon-gray);
+}
+
+/* LOGIN PAGE */
+.login-container {
+    width: 350px;
+    margin: 50px auto;
+    background: var(--moon-blue);
+    padding: 20px;
+    border-radius: 10px;
+}
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: none;
+}
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    background: var(--moon-light-blue);
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+
+:root {
+    --moon-dark: #0d1b2a;
+    --moon-blue: #1b263b;
+    --moon-light-blue: #415a77;
+    --moon-gray: #778da9;
+    --moon-white: #e0e1dd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: var(--moon-dark);
+    color: var(--moon-white);
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+nav {
+    background: var(--moon-blue);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav a {
+    color: var(--moon-white);
+    text-decoration: none;
+    margin-right: 15px;
+    font-weight: 500;
+}
+nav a:hover {
+    color: var(--moon-gray);
+}
+
+/* PRODUCT GRID */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+}
+
+.product-card {
+    background: var(--moon-blue);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: 0.3s;
+}
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.product-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+}
+.product-card .price {
+    color: var(--moon-gray);
+    margin-bottom: 10px;
+}
+.product-card button {
+    padding: 10px;
+    background: var(--moon-light-blue);
+    color: var(--moon-white);
+    border: none;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.product-card button:hover {
+    background: var(--moon-gray);
+}
+
+/* LOGIN PAGE */
+.login-container {
+    width: 350px;
+    margin: 50px auto;
+    background: var(--moon-blue);
+    padding: 20px;
+    border-radius: 10px;
+}
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: none;
+}
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    background: var(--moon-light-blue);
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
