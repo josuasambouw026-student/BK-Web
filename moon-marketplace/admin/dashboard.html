@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Dashboard - MOON Marketplace</title>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+<style>
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 250px;
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebar .logo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.sidebar .user-info {
+  text-align: center;
+  padding: 15px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.sidebar .user-info .avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--moon-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 24px;
+}
+.sidebar .user-info .name {
+  font-weight: 600;
+}
+.sidebar .user-info .role {
+  font-size: 12px;
+  color: var(--moon-muted);
+  text-transform: uppercase;
+}
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  color: var(--moon-white);
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: background 0.2s;
+}
+.sidebar nav a:hover, .sidebar nav a.active {
+  background: rgba(91,132,177,0.2);
+}
+.sidebar nav a .icon {
+  font-size: 18px;
+}
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  padding: 30px;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.page-header h1 {
+  margin: 0;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.02);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.stat-card .icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+.stat-card .value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.stat-card .label {
+  color: var(--moon-muted);
+  font-size: 14px;
+}
+.data-table {
+  width: 100%;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+.data-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.data-table th {
+  background: rgba(0,0,0,0.2);
+  font-weight: 600;
+  color: var(--moon-muted);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.data-table tr:hover {
+  background: rgba(255,255,255,0.02);
+}
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-pending {
+  background: rgba(255,193,7,0.2);
+  color: #ffc107;
+}
+.badge-approved {
+  background: rgba(40,167,69,0.2);
+  color: #28a745;
+}
+.badge-blocked {
+  background: rgba(220,53,69,0.2);
+  color: #dc3545;
+}
+.btn-sm {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 5px;
+  transition: opacity 0.2s;
+}
+.btn-sm:hover {
+  opacity: 0.8;
+}
+.btn-approve {
+  background: #28a745;
+  color: white;
+}
+.btn-block {
+  background: #dc3545;
+  color: white;
+}
+.btn-unblock {
+  background: #17a2b8;
+  color: white;
+}
+.section-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: rgba(255,255,255,0.05);
+  color: var(--moon-white);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.tab-btn.active {
+  background: var(--moon-soft);
+  color: var(--moon-dark);
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+.btn-logout {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(220,53,69,0.2);
+  border: 1px solid rgba(220,53,69,0.3);
+  color: #dc3545;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-logout:hover {
+  background: rgba(220,53,69,0.3);
+}
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--moon-muted);
+}
+.empty-state .icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+</style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">🌙 MOON Admin</div>
+      <div class="user-info">
+        <div class="avatar">👤</div>
+        <div class="name" id="adminName">Admin</div>
+        <div class="role">Administrator</div>
+      </div>
+      <nav>
+        <a href="#" class="active" data-tab="dashboard"><span class="icon">📊</span> Dashboard</a>
+        <a href="#" data-tab="users"><span class="icon">👥</span> Kelola User</a>
+        <a href="#" data-tab="products"><span class="icon">📦</span> Kelola Produk</a>
+        <a href="#" data-tab="orders"><span class="icon">🛒</span> Semua Order</a>
+      </nav>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard Tab -->
+      <div class="tab-content active" id="dashboard">
+        <div class="page-header">
+          <h1>Dashboard</h1>
+          <span id="currentDate"></span>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="icon">👥</div>
+            <div class="value" id="totalUsers">0</div>
+            <div class="label">Total User</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🏪</div>
+            <div class="value" id="totalSellers">0</div>
+            <div class="label">Penjual</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🛒</div>
+            <div class="value" id="totalBuyers">0</div>
+            <div class="label">Pembeli</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">📦</div>
+            <div class="value" id="totalProducts">0</div>
+            <div class="label">Produk</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">⏳</div>
+            <div class="value" id="pendingUsers">0</div>
+            <div class="label">User Pending</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">📋</div>
+            <div class="value" id="pendingProducts">0</div>
+            <div class="label">Produk Pending</div>
+          </div>
+        </div>
+        
+        <h3 class="section-title">⏳ User Menunggu Persetujuan</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Toko</th>
+                <th>Tanggal Daftar</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pendingUsersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div class="tab-content" id="users">
+        <div class="page-header">
+          <h1>Kelola User</h1>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab-btn active" data-filter="all">Semua</button>
+          <button class="tab-btn" data-filter="pending">Pending</button>
+          <button class="tab-btn" data-filter="approved">Approved</button>
+          <button class="tab-btn" data-filter="blocked">Blocked</button>
+        </div>
+        
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Toko</th>
+                <th>Status</th>
+                <th>Tanggal Daftar</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Products Tab -->
+      <div class="tab-content" id="products">
+        <div class="page-header">
+          <h1>Kelola Produk</h1>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab-btn active" data-filter="all">Semua</button>
+          <button class="tab-btn" data-filter="pending">Pending</button>
+          <button class="tab-btn" data-filter="approved">Approved</button>
+          <button class="tab-btn" data-filter="blocked">Blocked</button>
+        </div>
+        
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Produk</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Kategori</th>
+                <th>Penjual</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="productsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Orders Tab -->
+      <div class="tab-content" id="orders">
+        <div class="page-header">
+          <h1>Semua Order</h1>
+        </div>
+        
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Pembeli</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status Order</th>
+                <th>Status Bayar</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script src="../assets/js/auth.js"></script>
+<script>
+// Check admin access
+document.addEventListener('DOMContentLoaded', () => {
+  const user = getCurrentUser();
+  if (!user || user.role !== 'admin') {
+    alert('Akses ditolak! Halaman ini hanya untuk Admin.');
+    window.location.href = '../login.html';
+    return;
+  }
+  
+  document.getElementById('adminName').textContent = user.username;
+  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  
+  loadDashboard();
+  loadUsers();
+  loadProducts();
+  loadOrders();
+});
+
+// Tab navigation
+document.querySelectorAll('.sidebar nav a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const tab = link.dataset.tab;
+    
+    document.querySelectorAll('.sidebar nav a').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+  });
+});
+
+// Filter tabs for users and products
+let currentUserFilter = 'all';
+let currentProductFilter = 'all';
+
+document.querySelectorAll('#users .tabs .tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#users .tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentUserFilter = btn.dataset.filter;
+    loadUsers();
+  });
+});
+
+document.querySelectorAll('#products .tabs .tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#products .tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentProductFilter = btn.dataset.filter;
+    loadProducts();
+  });
+});
+
+function loadDashboard() {
+  const users = getUsers();
+  const products = getProducts();
+  const orders = getOrders();
+  
+  document.getElementById('totalUsers').textContent = users.filter(u => u.role !== 'admin').length;
+  document.getElementById('totalSellers').textContent = users.filter(u => u.role === 'seller').length;
+  document.getElementById('totalBuyers').textContent = users.filter(u => u.role === 'buyer').length;
+  document.getElementById('totalProducts').textContent = products.length;
+  document.getElementById('pendingUsers').textContent = users.filter(u => u.status === 'pending').length;
+  document.getElementById('pendingProducts').textContent = products.filter(p => p.status === 'pending').length;
+  
+  // Pending users table
+  const pendingUsers = users.filter(u => u.status === 'pending');
+  const tbody = document.getElementById('pendingUsersTable');
+  
+  if (pendingUsers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--moon-muted)">Tidak ada user yang menunggu persetujuan</td></tr>';
+  } else {
+    tbody.innerHTML = pendingUsers.map(u => `
+      <tr>
+        <td>${u.username}</td>
+        <td>${u.email}</td>
+        <td><span class="badge badge-${u.role === 'seller' ? 'pending' : 'approved'}">${u.role}</span></td>
+        <td>${u.storeName || '-'}</td>
+        <td>${formatDate(u.createdAt)}</td>
+        <td>
+          <button class="btn-sm btn-approve" onclick="handleApproveUser(${u.id})">✓ Approve</button>
+          <button class="btn-sm btn-block" onclick="handleBlockUser(${u.id})">✗ Tolak</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+}
+
+function loadUsers() {
+  let users = getUsers().filter(u => u.role !== 'admin');
+  
+  if (currentUserFilter !== 'all') {
+    users = users.filter(u => u.status === currentUserFilter);
+  }
+  
+  const tbody = document.getElementById('usersTable');
+  
+  if (users.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--moon-muted)">Tidak ada data</td></tr>';
+  } else {
+    tbody.innerHTML = users.map(u => `
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.username}</td>
+        <td>${u.email}</td>
+        <td>${u.role}</td>
+        <td>${u.storeName || '-'}</td>
+        <td><span class="badge badge-${u.status}">${u.status}</span></td>
+        <td>${formatDate(u.createdAt)}</td>
+        <td>
+          ${u.status === 'pending' ? `<button class="btn-sm btn-approve" onclick="handleApproveUser(${u.id})">Approve</button>` : ''}
+          ${u.status !== 'blocked' ? `<button class="btn-sm btn-block" onclick="handleBlockUser(${u.id})">Block</button>` : ''}
+          ${u.status === 'blocked' ? `<button class="btn-sm btn-unblock" onclick="handleUnblockUser(${u.id})">Unblock</button>` : ''}
+        </td>
+      </tr>
+    `).join('');
+  }
+}
+
+function loadProducts() {
+  let products = getProducts();
+  
+  if (currentProductFilter !== 'all') {
+    products = products.filter(p => p.status === currentProductFilter);
+  }
+  
+  const tbody = document.getElementById('productsTable');
+  
+  if (products.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--moon-muted)">Tidak ada data</td></tr>';
+  } else {
+    tbody.innerHTML = products.map(p => `
+      <tr>
+        <td>${p.id}</td>
+        <td>${p.title}</td>
+        <td>${toIDR(p.price)}</td>
+        <td>${p.stock}</td>
+        <td>${p.category}</td>
+        <td>${p.sellerName}</td>
+        <td><span class="badge badge-${p.status}">${p.status}</span></td>
+        <td>
+          ${p.status === 'pending' ? `<button class="btn-sm btn-approve" onclick="handleApproveProduct(${p.id})">Approve</button>` : ''}
+          ${p.status !== 'blocked' ? `<button class="btn-sm btn-block" onclick="handleBlockProduct(${p.id})">Block</button>` : ''}
+          ${p.status === 'blocked' ? `<button class="btn-sm btn-approve" onclick="handleApproveProduct(${p.id})">Unblock</button>` : ''}
+        </td>
+      </tr>
+    `).join('');
+  }
+}
+
+function loadOrders() {
+  const orders = getOrders();
+  const users = getUsers();
+  const tbody = document.getElementById('ordersTable');
+  
+  if (orders.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--moon-muted)">Belum ada order</td></tr>';
+  } else {
+    tbody.innerHTML = orders.map(o => {
+      const buyer = users.find(u => u.id === o.buyerId);
+      return `
+        <tr>
+          <td>#${o.id}</td>
+          <td>${buyer ? buyer.username : 'Unknown'}</td>
+          <td>${o.items.length} item(s)</td>
+          <td>${toIDR(o.total)}</td>
+          <td><span class="badge badge-${o.status === 'completed' ? 'approved' : 'pending'}">${o.status}</span></td>
+          <td><span class="badge badge-${o.paymentStatus === 'paid' ? 'approved' : 'blocked'}">${o.paymentStatus}</span></td>
+          <td>${formatDate(o.createdAt)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+}
+
+// Action handlers
+function handleApproveUser(userId) {
+  if (confirm('Approve user ini?')) {
+    approveUser(userId);
+    loadDashboard();
+    loadUsers();
+  }
+}
+
+function handleBlockUser(userId) {
+  if (confirm('Block user ini?')) {
+    blockUser(userId);
+    loadDashboard();
+    loadUsers();
+  }
+}
+
+function handleUnblockUser(userId) {
+  if (confirm('Unblock user ini?')) {
+    unblockUser(userId);
+    loadDashboard();
+    loadUsers();
+  }
+}
+
+function handleApproveProduct(productId) {
+  if (confirm('Approve produk ini?')) {
+    approveProduct(productId);
+    loadDashboard();
+    loadProducts();
+  }
+}
+
+function handleBlockProduct(productId) {
+  if (confirm('Block produk ini?')) {
+    blockProduct(productId);
+    loadDashboard();
+    loadProducts();
+  }
+}
+</script>
+</body>
+</html>

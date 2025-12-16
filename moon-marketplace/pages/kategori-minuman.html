@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kategori - Minuman | MOON</title>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="brand"><a href="../index.html" style="color:inherit;text-decoration:none"><h1>MOON</h1></a></div>
+      <div class="nav-actions">
+        <a class="icon" href="../cart.html" title="Keranjang">🛒 <span id="cartCount" class="cart-count">0</span></a>
+        <a class="btn" href="../login.html">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="category-bar">
+    <div class="category-inner">
+      <a href="kategori-produk.html">Produk</a>
+      <a href="kategori-makanan.html">Makanan</a>
+      <a href="kategori-minuman.html" style="background:var(--moon-soft);color:var(--moon-dark)">Minuman</a>
+      <a href="kategori-pakaian.html">Pakaian</a>
+      <a href="kategori-perabot.html">Perabotan</a>
+      <a href="kategori-obat.html">Obat-obatan</a>
+      <a href="kategori-kosmetik.html">Kosmetik</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h2>Minuman</h2>
+    <p style="color:var(--moon-muted);margin-bottom:20px">Minuman segar dari MOON Marketplace</p>
+    <div id="productGrid" class="product-grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    &copy; <strong>MOON</strong> Marketplace — 2025
+  </footer>
+
+<script src="../assets/js/app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const filtered = typeof PRODUCTS !== 'undefined' ? PRODUCTS.filter(p=> p.category.toLowerCase() === 'minuman') : [];
+    if(typeof renderProducts === 'function'){
+      renderProducts(filtered);
+    }
+  });
+</script>
+</body>
+</html>

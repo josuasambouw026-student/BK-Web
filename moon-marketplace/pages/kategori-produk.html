@@ -15,10 +15,9 @@
 <script>
   // filter products by category 'Produk'
   document.addEventListener('DOMContentLoaded', ()=>{
-    const filtered = PRODUCTS ? PRODUCTS.filter(p=> p.category.toLowerCase() === 'produk' || p.category.toLowerCase() === 'produk') : [];
-    // if PRODUCTS not available in this file's scope because of path, app.js defines PRODUCTS in root; ensure app.js loads
+    const filtered = typeof PRODUCTS !== 'undefined' ? PRODUCTS.filter(p=> p.category.toLowerCase() === 'produk') : [];
     if(typeof renderProducts === 'function'){
-      renderProducts(filtered.length ? filtered : PRODUCTS);
+      renderProducts(filtered);
     }
   });
 </script>

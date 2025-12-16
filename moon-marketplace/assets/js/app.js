@@ -29,9 +29,9 @@ function updateCartCount(){
 // format currency
 function toIDR(v){ return "Rp " + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-// render products on index
+// render products on index - support both productGrid and productList
 function renderProducts(list){
-  const grid = document.getElementById("productGrid");
+  const grid = document.getElementById("productGrid") || document.getElementById("productList");
   if(!grid) return;
   grid.innerHTML = "";
   list.forEach(p=>{
@@ -69,9 +69,9 @@ function addToCart(productId, qty = 1){
   alert(`${p.title} ditambahkan ke keranjang`);
 }
 
-// search
+// search - support both searchInput and searchBox
 function initSearch(){
-  const s = document.getElementById("searchInput");
+  const s = document.getElementById("searchInput") || document.querySelector(".searchBox");
   if(!s) return;
   s.addEventListener("input", ()=>{
     const q = s.value.trim().toLowerCase();
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       localStorage.removeItem(CART_KEY);
       saveCart([]);
       alert("Pembayaran mock berhasil! Terima kasih.");
-      window.location.href = "../index.html";
+      window.location.href = "index.html";
     });
   }
 });

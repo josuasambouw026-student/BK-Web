@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Daftar - MOON Marketplace</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-box {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255,255,255,0.02);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.auth-box h2 {
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+.auth-box .subtitle {
+  color: var(--moon-muted);
+  text-align: center;
+  margin-bottom: 24px;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--moon-muted);
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.2);
+  color: var(--moon-white);
+  font-size: 14px;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: var(--moon-soft);
+}
+.form-group select option {
+  background: var(--moon-dark);
+  color: var(--moon-white);
+}
+.btn-auth {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--moon-soft);
+  color: var(--moon-dark);
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+.btn-auth:hover {
+  background: var(--moon-blue);
+  color: var(--moon-white);
+}
+.auth-links {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--moon-muted);
+}
+.auth-links a {
+  color: var(--moon-soft);
+  text-decoration: none;
+}
+.auth-links a:hover {
+  text-decoration: underline;
+}
+.error-msg {
+  background: rgba(255,100,100,0.1);
+  border: 1px solid rgba(255,100,100,0.3);
+  color: #ff6b6b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: none;
+}
+.success-msg {
+  background: rgba(100,255,100,0.1);
+  border: 1px solid rgba(100,255,100,0.3);
+  color: #6bff6b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: none;
+}
+.logo-link {
+  display: block;
+  text-align: center;
+  color: inherit;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+.logo-link h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 2px;
+}
+.role-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.role-option {
+  flex: 1;
+  padding: 16px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.role-option:hover {
+  border-color: var(--moon-soft);
+}
+.role-option.active {
+  border-color: var(--moon-soft);
+  background: rgba(91,132,177,0.1);
+}
+.role-option h3 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+}
+.role-option p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--moon-muted);
+}
+.role-option .icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.seller-fields {
+  display: none;
+}
+.seller-fields.show {
+  display: block;
+}
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+.form-row .form-group {
+  flex: 1;
+}
+</style>
+</head>
+<body>
+  <main class="auth-container">
+    <div class="auth-box">
+      <a href="index.html" class="logo-link"><h1>🌙 MOON</h1></a>
+      <h2>Buat Akun Baru</h2>
+      <p class="subtitle">Pilih tipe akun Anda</p>
+      
+      <div id="errorMsg" class="error-msg"></div>
+      <div id="successMsg" class="success-msg"></div>
+      
+      <div class="role-selector">
+        <div class="role-option active" data-role="buyer">
+          <div class="icon">🛒</div>
+          <h3>Pembeli</h3>
+          <p>Belanja produk terbaik</p>
+        </div>
+        <div class="role-option" data-role="seller">
+          <div class="icon">🏪</div>
+          <h3>Penjual</h3>
+          <p>Jual produk Anda</p>
+        </div>
+      </div>
+      
+      <form id="registerForm">
+        <input type="hidden" id="role" value="buyer" />
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Nama Lengkap</label>
+            <input type="text" id="fullName" placeholder="Nama lengkap Anda" required />
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Username unik" required />
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="email@example.com" required />
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Min. 6 karakter" required />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Konfirmasi Password</label>
+            <input type="password" id="confirmPassword" placeholder="Ulangi password" required />
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">No. Telepon</label>
+          <input type="tel" id="phone" placeholder="08xxxxxxxxxx" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="address">Alamat</label>
+          <textarea id="address" rows="2" placeholder="Alamat lengkap" required></textarea>
+        </div>
+        
+        <!-- Seller-specific fields -->
+        <div class="seller-fields" id="sellerFields">
+          <div class="form-group">
+            <label for="storeName">Nama Toko</label>
+            <input type="text" id="storeName" placeholder="Nama toko Anda" />
+          </div>
+        </div>
+        
+        <button type="submit" class="btn-auth">Daftar Sekarang</button>
+      </form>
+      
+      <div class="auth-links">
+        <p>Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+        <p style="margin-top:10px"><a href="index.html">← Kembali ke Beranda</a></p>
+      </div>
+    </div>
+  </main>
+
+<script src="assets/js/auth.js"></script>
+<script>
+// Role selector
+const roleOptions = document.querySelectorAll('.role-option');
+const roleInput = document.getElementById('role');
+const sellerFields = document.getElementById('sellerFields');
+const storeNameInput = document.getElementById('storeName');
+
+roleOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    roleOptions.forEach(o => o.classList.remove('active'));
+    option.classList.add('active');
+    roleInput.value = option.dataset.role;
+    
+    if (option.dataset.role === 'seller') {
+      sellerFields.classList.add('show');
+      storeNameInput.required = true;
+    } else {
+      sellerFields.classList.remove('show');
+      storeNameInput.required = false;
+    }
+  });
+});
+
+// Form submission
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const errorMsg = document.getElementById('errorMsg');
+  const successMsg = document.getElementById('successMsg');
+  
+  errorMsg.style.display = 'none';
+  successMsg.style.display = 'none';
+  
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  
+  if (password.length < 6) {
+    errorMsg.textContent = 'Password minimal 6 karakter!';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  if (password !== confirmPassword) {
+    errorMsg.textContent = 'Password tidak cocok!';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  const userData = {
+    fullName: document.getElementById('fullName').value.trim(),
+    username: document.getElementById('username').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    password: password,
+    phone: document.getElementById('phone').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    role: document.getElementById('role').value,
+    storeName: document.getElementById('storeName').value.trim()
+  };
+  
+  const result = registerUser(userData);
+  
+  if (result.success) {
+    successMsg.innerHTML = result.message;
+    if (userData.role === 'seller') {
+      successMsg.innerHTML += '<br><small>Anda akan diarahkan ke halaman login...</small>';
+    }
+    successMsg.style.display = 'block';
+    
+    document.getElementById('registerForm').reset();
+    roleOptions.forEach(o => o.classList.remove('active'));
+    roleOptions[0].classList.add('active');
+    sellerFields.classList.remove('show');
+    roleInput.value = 'buyer';
+    
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+  } else {
+    errorMsg.textContent = result.message;
+    errorMsg.style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>

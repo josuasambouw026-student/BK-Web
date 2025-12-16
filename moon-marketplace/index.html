@@ -1,17 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>MOON Marketplace</title>
 <link rel="stylesheet" href="assets/css/style.css" />
+<style>
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--moon-soft);
+  color: var(--moon-dark);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--moon-card);
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 100;
+  margin-top: 8px;
+}
+.user-dropdown.active {
+  display: block;
+}
+.user-dropdown a {
+  display: block;
+  padding: 12px 16px;
+  color: var(--moon-white);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.user-dropdown a:hover {
+  background: rgba(255,255,255,0.05);
+}
+.user-dropdown a:first-child {
+  border-radius: 8px 8px 0 0;
+}
+.user-dropdown a:last-child {
+  border-radius: 0 0 8px 8px;
+  color: #ff6b6b;
+}
+.product-seller {
+  font-size: 12px;
+  color: var(--moon-muted);
+  margin-top: 4px;
+}
+</style>
 </head>
 <body>
   <!-- NAVBAR -->
   <header class="navbar">
     <div class="nav-inner">
       <div class="brand">
-        <h1>MOON</h1>
+        <h1>🌙 MOON</h1>
       </div>
 
       <div class="search-wrap">
@@ -20,7 +76,9 @@
 
       <div class="nav-actions">
         <a class="icon" href="cart.html" title="Keranjang">🛒 <span id="cartCount" class="cart-count">0</span></a>
-        <a class="btn" href="login.html">Login</a>
+        <div class="user-menu" id="userMenu">
+          <!-- Will be populated by JS -->
+        </div>
       </div>
     </div>
   </header>
@@ -46,7 +104,6 @@
         <p>Temukan produk terbaik dengan suasana bulan — cepat, aman, dan nyaman.</p>
       </div>
       <div class="hero-right">
-        <!-- bisa tempat banner -->
         <div class="banner">Free shipping di kota tertentu</div>
       </div>
     </section>
@@ -61,6 +118,170 @@
     &copy; <strong>MOON</strong> Marketplace — 2025
   </footer>
 
+<script src="assets/js/auth.js"></script>
 <script src="assets/js/app.js"></script>
+<script>
+// User menu handling
+function updateUserMenu() {
+  const userMenu = document.getElementById('userMenu');
+  const user = getCurrentUser();
+  
+  if (user) {
+    userMenu.innerHTML = `
+      <button class="user-btn" onclick="toggleDropdown()">
+        👤 ${user.username}
+      </button>
+      <div class="user-dropdown" id="userDropdown">
+        ${user.role === 'admin' ? '<a href="admin/dashboard.html">📊 Dashboard Admin</a>' : ''}
+        ${user.role === 'seller' ? '<a href="seller/dashboard.html">🏪 Dashboard Penjual</a>' : ''}
+        ${user.role === 'buyer' ? '<a href="orders.html">📦 Pesanan Saya</a>' : ''}
+        <a href="#" onclick="handleLogout()">🚪 Logout</a>
+      </div>
+    `;
+  } else {
+    userMenu.innerHTML = `<a class="btn" href="login.html">Login</a>`;
+  }
+}
+
+function toggleDropdown() {
+  document.getElementById('userDropdown').classList.toggle('active');
+}
+
+function handleLogout() {
+  if (confirm('Yakin ingin logout?')) {
+    logout();
+  }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('userDropdown');
+  const userBtn = document.querySelector('.user-btn');
+  if (dropdown && !dropdown.contains(e.target) && e.target !== userBtn) {
+    dropdown.classList.remove('active');
+  }
+});
+
+// Override renderProducts to show seller info
+function renderProductsWithSeller(list) {
+  const grid = document.getElementById('productGrid') || document.getElementById('productList');
+  if (!grid) return;
+  grid.innerHTML = '';
+  
+  if (list.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--moon-muted)">Tidak ada produk ditemukan</div>';
+    return;
+  }
+  
+  list.forEach(p => {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="imgwrap"><img loading="lazy" src="${p.img}" alt="${p.title}" onerror="this.src='assets/img/products/default.jpg'"></div>
+      <h3>${p.title}</h3>
+      <div class="product-seller">🏪 ${p.sellerName || 'MOON Store'}</div>
+      <div class="price">${toIDR(p.price)}</div>
+      <div style="font-size:12px;color:var(--moon-muted)">Stok: ${p.stock}</div>
+      <div class="meta">
+        <button class="btn-primary" data-id="${p.id}" ${p.stock < 1 ? 'disabled style="opacity:0.5"' : ''}>
+          ${p.stock < 1 ? 'Habis' : 'Tambah ke Keranjang'}
+        </button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Attach handlers
+  document.querySelectorAll('.btn-primary[data-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        alert('Silakan login terlebih dahulu untuk berbelanja!');
+        window.location.href = 'login.html';
+        return;
+      }
+      if (user.role !== 'buyer') {
+        alert('Hanya pembeli yang dapat menambahkan produk ke keranjang!');
+        return;
+      }
+      const id = Number(btn.getAttribute('data-id'));
+      addToCartNew(id);
+    });
+  });
+}
+
+// New add to cart function using approved products
+function addToCartNew(productId, qty = 1) {
+  const products = getApprovedProducts();
+  const p = products.find(x => x.id === productId);
+  if (!p) return alert('Produk tidak ditemukan');
+  if (p.stock < qty) return alert('Stok tidak mencukupi!');
+  
+  const cart = getCart();
+  const idx = cart.findIndex(i => i.id === p.id);
+  
+  if (idx === -1) {
+    cart.push({ 
+      id: p.id, 
+      title: p.title, 
+      price: p.price, 
+      img: p.img, 
+      qty,
+      sellerId: p.sellerId,
+      sellerName: p.sellerName
+    });
+  } else {
+    cart[idx].qty = (cart[idx].qty || 1) + qty;
+  }
+  
+  saveCart(cart);
+  alert(`${p.title} ditambahkan ke keranjang`);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  updateUserMenu();
+  
+  // Load approved products from seller system
+  const approvedProducts = getApprovedProducts();
+  
+  if (approvedProducts.length > 0) {
+    renderProductsWithSeller(approvedProducts);
+  } else {
+    // Show default products if no seller products
+    renderProducts(PRODUCTS);
+  }
+  
+  // Search functionality
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      const approvedProducts = getApprovedProducts();
+      
+      if (approvedProducts.length > 0) {
+        if (!q) {
+          renderProductsWithSeller(approvedProducts);
+        } else {
+          renderProductsWithSeller(approvedProducts.filter(p => 
+            p.title.toLowerCase().includes(q) || 
+            p.category.toLowerCase().includes(q) ||
+            (p.sellerName && p.sellerName.toLowerCase().includes(q))
+          ));
+        }
+      } else {
+        if (!q) {
+          renderProducts(PRODUCTS);
+        } else {
+          renderProducts(PRODUCTS.filter(p => 
+            p.title.toLowerCase().includes(q) || 
+            p.category.toLowerCase().includes(q)
+          ));
+        }
+      }
+    });
+  }
+});
+</script>
 </body>
 </html>

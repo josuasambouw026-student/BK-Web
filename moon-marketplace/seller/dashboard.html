@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Seller Dashboard - MOON Marketplace</title>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+<style>
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 250px;
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebar .logo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.sidebar .user-info {
+  text-align: center;
+  padding: 15px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.sidebar .user-info .avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--moon-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 24px;
+}
+.sidebar .user-info .name {
+  font-weight: 600;
+}
+.sidebar .user-info .store {
+  font-size: 14px;
+  color: var(--moon-soft);
+}
+.sidebar .user-info .role {
+  font-size: 12px;
+  color: var(--moon-muted);
+  text-transform: uppercase;
+}
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  color: var(--moon-white);
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: background 0.2s;
+}
+.sidebar nav a:hover, .sidebar nav a.active {
+  background: rgba(91,132,177,0.2);
+}
+.sidebar nav a .icon {
+  font-size: 18px;
+}
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  padding: 30px;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.page-header h1 {
+  margin: 0;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.02);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.stat-card .icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+.stat-card .value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.stat-card .label {
+  color: var(--moon-muted);
+  font-size: 14px;
+}
+.data-table {
+  width: 100%;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+.data-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.data-table th {
+  background: rgba(0,0,0,0.2);
+  font-weight: 600;
+  color: var(--moon-muted);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.data-table tr:hover {
+  background: rgba(255,255,255,0.02);
+}
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-pending {
+  background: rgba(255,193,7,0.2);
+  color: #ffc107;
+}
+.badge-approved {
+  background: rgba(40,167,69,0.2);
+  color: #28a745;
+}
+.badge-blocked {
+  background: rgba(220,53,69,0.2);
+  color: #dc3545;
+}
+.badge-processing {
+  background: rgba(0,123,255,0.2);
+  color: #007bff;
+}
+.btn-sm {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 5px;
+  transition: opacity 0.2s;
+}
+.btn-sm:hover {
+  opacity: 0.8;
+}
+.btn-edit {
+  background: #17a2b8;
+  color: white;
+}
+.btn-delete {
+  background: #dc3545;
+  color: white;
+}
+.btn-primary {
+  background: var(--moon-soft);
+  color: var(--moon-dark);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.section-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+.btn-logout {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(220,53,69,0.2);
+  border: 1px solid rgba(220,53,69,0.3);
+  color: #dc3545;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-logout:hover {
+  background: rgba(220,53,69,0.3);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+.modal.active {
+  display: flex;
+}
+.modal-content {
+  background: var(--moon-dark);
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.modal-header h2 {
+  margin: 0;
+}
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--moon-white);
+  font-size: 24px;
+  cursor: pointer;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--moon-muted);
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.2);
+  color: var(--moon-white);
+  font-size: 14px;
+}
+.form-group select option {
+  background: var(--moon-dark);
+}
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+.form-row .form-group {
+  flex: 1;
+}
+.error-msg, .success-msg {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: none;
+}
+.error-msg {
+  background: rgba(255,100,100,0.1);
+  border: 1px solid rgba(255,100,100,0.3);
+  color: #ff6b6b;
+}
+.success-msg {
+  background: rgba(100,255,100,0.1);
+  border: 1px solid rgba(100,255,100,0.3);
+  color: #6bff6b;
+}
+</style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">🌙 MOON Seller</div>
+      <div class="user-info">
+        <div class="avatar">🏪</div>
+        <div class="name" id="sellerName">Penjual</div>
+        <div class="store" id="storeName">Nama Toko</div>
+        <div class="role">Penjual</div>
+      </div>
+      <nav>
+        <a href="#" class="active" data-tab="dashboard"><span class="icon">📊</span> Dashboard</a>
+        <a href="#" data-tab="products"><span class="icon">📦</span> Produk Saya</a>
+        <a href="#" data-tab="orders"><span class="icon">🛒</span> Pesanan</a>
+        <a href="../index.html"><span class="icon">🏠</span> Ke Beranda</a>
+      </nav>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard Tab -->
+      <div class="tab-content active" id="dashboard">
+        <div class="page-header">
+          <h1>Dashboard Penjual</h1>
+          <span id="currentDate"></span>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="icon">📦</div>
+            <div class="value" id="totalProducts">0</div>
+            <div class="label">Total Produk</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">✅</div>
+            <div class="value" id="approvedProducts">0</div>
+            <div class="label">Produk Aktif</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">⏳</div>
+            <div class="value" id="pendingProducts">0</div>
+            <div class="label">Menunggu Approval</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🛒</div>
+            <div class="value" id="totalOrders">0</div>
+            <div class="label">Total Pesanan</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">💰</div>
+            <div class="value" id="totalRevenue">Rp 0</div>
+            <div class="label">Total Pendapatan</div>
+          </div>
+        </div>
+        
+        <h3 class="section-title">📋 Pesanan Terbaru</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Produk</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+            <tbody id="recentOrdersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Products Tab -->
+      <div class="tab-content" id="products">
+        <div class="page-header">
+          <h1>Produk Saya</h1>
+          <button class="btn-primary" onclick="openAddProductModal()">+ Tambah Produk</button>
+        </div>
+        
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Gambar</th>
+                <th>Nama Produk</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Kategori</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="productsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Orders Tab -->
+      <div class="tab-content" id="orders">
+        <div class="page-header">
+          <h1>Pesanan Masuk</h1>
+        </div>
+        
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Pembeli</th>
+                <th>Produk</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Status Bayar</th>
+                <th>Status Order</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add/Edit Product Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Tambah Produk</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      
+      <div id="modalError" class="error-msg"></div>
+      <div id="modalSuccess" class="success-msg"></div>
+      
+      <form id="productForm">
+        <input type="hidden" id="productId" value="">
+        
+        <div class="form-group">
+          <label for="productTitle">Nama Produk</label>
+          <input type="text" id="productTitle" placeholder="Nama produk Anda" required />
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="productPrice">Harga (Rp)</label>
+            <input type="number" id="productPrice" placeholder="100000" min="1000" required />
+          </div>
+          <div class="form-group">
+            <label for="productStock">Stok</label>
+            <input type="number" id="productStock" placeholder="10" min="1" required />
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="productCategory">Kategori</label>
+          <select id="productCategory" required>
+            <option value="">Pilih Kategori</option>
+            <option value="Produk">Produk</option>
+            <option value="Makanan">Makanan</option>
+            <option value="Minuman">Minuman</option>
+            <option value="Pakaian">Pakaian</option>
+            <option value="Perabotan">Perabotan</option>
+            <option value="Obat-obatan">Obat-obatan</option>
+            <option value="Kosmetik">Kosmetik</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="productImg">URL Gambar</label>
+          <input type="text" id="productImg" placeholder="https://... atau assets/img/products/..." />
+        </div>
+        
+        <div class="form-group">
+          <label for="productDesc">Deskripsi</label>
+          <textarea id="productDesc" rows="3" placeholder="Deskripsi produk..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width:100%">Simpan Produk</button>
+      </form>
+    </div>
+  </div>
+
+<script src="../assets/js/auth.js"></script>
+<script>
+let currentUser = null;
+
+// Check seller access
+document.addEventListener('DOMContentLoaded', () => {
+  currentUser = getCurrentUser();
+  if (!currentUser || currentUser.role !== 'seller') {
+    alert('Akses ditolak! Halaman ini hanya untuk Penjual.');
+    window.location.href = '../login.html';
+    return;
+  }
+  
+  if (currentUser.status !== 'approved') {
+    alert('Akun Anda belum disetujui oleh Admin.');
+    logout();
+    return;
+  }
+  
+  document.getElementById('sellerName').textContent = currentUser.fullName || currentUser.username;
+  document.getElementById('storeName').textContent = currentUser.storeName || 'Toko Saya';
+  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  
+  loadDashboard();
+  loadProducts();
+  loadOrders();
+});
+
+// Tab navigation
+document.querySelectorAll('.sidebar nav a[data-tab]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const tab = link.dataset.tab;
+    
+    document.querySelectorAll('.sidebar nav a').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+  });
+});
+
+function loadDashboard() {
+  const myProducts = getProductsBySeller(currentUser.id);
+  const myOrders = getOrdersBySeller(currentUser.id);
+  
+  document.getElementById('totalProducts').textContent = myProducts.length;
+  document.getElementById('approvedProducts').textContent = myProducts.filter(p => p.status === 'approved').length;
+  document.getElementById('pendingProducts').textContent = myProducts.filter(p => p.status === 'pending').length;
+  document.getElementById('totalOrders').textContent = myOrders.length;
+  
+  // Calculate revenue from paid orders
+  let revenue = 0;
+  myOrders.forEach(order => {
+    if (order.paymentStatus === 'paid') {
+      order.items.forEach(item => {
+        if (item.sellerId === currentUser.id) {
+          revenue += item.price * item.qty;
+        }
+      });
+    }
+  });
+  document.getElementById('totalRevenue').textContent = toIDR(revenue);
+  
+  // Recent orders
+  const tbody = document.getElementById('recentOrdersTable');
+  const recentOrders = myOrders.slice(-5).reverse();
+  
+  if (recentOrders.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--moon-muted)">Belum ada pesanan</td></tr>';
+  } else {
+    tbody.innerHTML = recentOrders.map(o => {
+      const myItems = o.items.filter(i => i.sellerId === currentUser.id);
+      return myItems.map(item => `
+        <tr>
+          <td>#${o.id}</td>
+          <td>${item.title}</td>
+          <td>${item.qty}</td>
+          <td>${toIDR(item.price * item.qty)}</td>
+          <td><span class="badge badge-${o.status === 'completed' ? 'approved' : o.status === 'processing' ? 'processing' : 'pending'}">${o.status}</span></td>
+          <td>${formatDate(o.createdAt)}</td>
+        </tr>
+      `).join('');
+    }).join('');
+  }
+}
+
+function loadProducts() {
+  const myProducts = getProductsBySeller(currentUser.id);
+  const tbody = document.getElementById('productsTable');
+  
+  if (myProducts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--moon-muted)">Belum ada produk. Klik "Tambah Produk" untuk mulai berjualan.</td></tr>';
+  } else {
+    tbody.innerHTML = myProducts.map(p => `
+      <tr>
+        <td>${p.id}</td>
+        <td><img src="${p.img || '../assets/img/products/default.jpg'}" style="width:50px;height:50px;object-fit:cover;border-radius:6px" onerror="this.src='../assets/img/products/default.jpg'"></td>
+        <td>${p.title}</td>
+        <td>${toIDR(p.price)}</td>
+        <td>${p.stock}</td>
+        <td>${p.category}</td>
+        <td><span class="badge badge-${p.status}">${p.status}</span></td>
+        <td>
+          <button class="btn-sm btn-edit" onclick="openEditProductModal(${p.id})">Edit</button>
+          <button class="btn-sm btn-delete" onclick="handleDeleteProduct(${p.id})">Hapus</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+}
+
+function loadOrders() {
+  const myOrders = getOrdersBySeller(currentUser.id);
+  const users = getUsers();
+  const tbody = document.getElementById('ordersTable');
+  
+  if (myOrders.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--moon-muted)">Belum ada pesanan masuk</td></tr>';
+  } else {
+    let rows = '';
+    myOrders.forEach(o => {
+      const buyer = users.find(u => u.id === o.buyerId);
+      const myItems = o.items.filter(i => i.sellerId === currentUser.id);
+      
+      myItems.forEach(item => {
+        rows += `
+          <tr>
+            <td>#${o.id}</td>
+            <td>${buyer ? buyer.username : 'Unknown'}</td>
+            <td>${item.title}</td>
+            <td>${item.qty}</td>
+            <td>${toIDR(item.price * item.qty)}</td>
+            <td><span class="badge badge-${o.paymentStatus === 'paid' ? 'approved' : 'blocked'}">${o.paymentStatus}</span></td>
+            <td><span class="badge badge-${o.status === 'completed' ? 'approved' : o.status === 'processing' ? 'processing' : 'pending'}">${o.status}</span></td>
+            <td>${formatDate(o.createdAt)}</td>
+            <td>
+              ${o.status === 'processing' ? `<button class="btn-sm btn-edit" onclick="updateOrderToShipped(${o.id})">Kirim</button>` : ''}
+              ${o.status === 'shipped' ? `<button class="btn-sm btn-edit" onclick="updateOrderToCompleted(${o.id})">Selesai</button>` : ''}
+            </td>
+          </tr>
+        `;
+      });
+    });
+    tbody.innerHTML = rows || '<tr><td colspan="9" style="text-align:center;color:var(--moon-muted)">Belum ada pesanan masuk</td></tr>';
+  }
+}
+
+// Modal functions
+function openAddProductModal() {
+  document.getElementById('modalTitle').textContent = 'Tambah Produk';
+  document.getElementById('productForm').reset();
+  document.getElementById('productId').value = '';
+  document.getElementById('modalError').style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'none';
+  document.getElementById('productModal').classList.add('active');
+}
+
+function openEditProductModal(productId) {
+  const products = getProductsBySeller(currentUser.id);
+  const product = products.find(p => p.id === productId);
+  
+  if (!product) return;
+  
+  document.getElementById('modalTitle').textContent = 'Edit Produk';
+  document.getElementById('productId').value = product.id;
+  document.getElementById('productTitle').value = product.title;
+  document.getElementById('productPrice').value = product.price;
+  document.getElementById('productStock').value = product.stock;
+  document.getElementById('productCategory').value = product.category;
+  document.getElementById('productImg').value = product.img || '';
+  document.getElementById('productDesc').value = product.description || '';
+  document.getElementById('modalError').style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'none';
+  document.getElementById('productModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('productModal').classList.remove('active');
+}
+
+// Form submission
+document.getElementById('productForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const errorMsg = document.getElementById('modalError');
+  const successMsg = document.getElementById('modalSuccess');
+  errorMsg.style.display = 'none';
+  successMsg.style.display = 'none';
+  
+  const productId = document.getElementById('productId').value;
+  const productData = {
+    title: document.getElementById('productTitle').value.trim(),
+    price: document.getElementById('productPrice').value,
+    stock: document.getElementById('productStock').value,
+    category: document.getElementById('productCategory').value,
+    img: document.getElementById('productImg').value.trim() || '../assets/img/products/default.jpg',
+    description: document.getElementById('productDesc').value.trim()
+  };
+  
+  let result;
+  if (productId) {
+    result = updateProduct(parseInt(productId), productData, currentUser.id);
+  } else {
+    result = addProduct(productData, currentUser.id);
+  }
+  
+  if (result.success) {
+    successMsg.textContent = result.message;
+    successMsg.style.display = 'block';
+    loadDashboard();
+    loadProducts();
+    
+    setTimeout(() => {
+      closeModal();
+    }, 1500);
+  } else {
+    errorMsg.textContent = result.message;
+    errorMsg.style.display = 'block';
+  }
+});
+
+function handleDeleteProduct(productId) {
+  if (confirm('Hapus produk ini?')) {
+    const result = deleteProduct(productId, currentUser.id);
+    if (result.success) {
+      alert(result.message);
+      loadDashboard();
+      loadProducts();
+    } else {
+      alert(result.message);
+    }
+  }
+}
+
+function updateOrderToShipped(orderId) {
+  if (confirm('Konfirmasi pengiriman order ini?')) {
+    updateOrderStatus(orderId, 'shipped');
+    loadDashboard();
+    loadOrders();
+  }
+}
+
+function updateOrderToCompleted(orderId) {
+  if (confirm('Tandai order ini sebagai selesai?')) {
+    updateOrderStatus(orderId, 'completed');
+    loadDashboard();
+    loadOrders();
+  }
+}
+
+// Close modal on outside click
+document.getElementById('productModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeModal();
+  }
+});
+</script>
+</body>
+</html>
